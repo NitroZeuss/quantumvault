@@ -126,3 +126,15 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+import cloudinary
+import cloudinary_storage
+
+# Cloudinary configuration
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'dxf2c3jnr',         
+    'API_KEY': '228477524253282',               
+    'API_SECRET': 'EZ6s7G301adgSnEbL1VL8WyZl-o',         
+}
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'

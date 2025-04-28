@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-7e#5x031jqvul7ejm3e9i-^m+4ocwk_cqm+)5y_glryu2-h*ji
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['quantumvault-mena.onrender.com', 'localhost:5500']
+ALLOWED_HOSTS = ['quantumvault-mena.onrender.com', 'localhost']
 
 
 # Application definition

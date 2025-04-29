@@ -1,23 +1,31 @@
+from rest_framework import viewsets, status
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.permissions import IsAuthenticated
 from .models import File
+from .serializers import FileSerializer
 import cloudinary.uploader
-from rest_framework import status
 
-@api_view(['POST'])
-def upload_file(request):
-    if request.user.is_authenticated:
-        file = request.FILES['file']  # Get the file from the request
-        cloudinary_response = cloudinary.uploader.upload(file)  # Upload to Cloudinary
-        file_url = cloudinary_response['secure_url']  # Get the file URL from Cloudinary
+class FileUploadViewSet(viewsets.ModelViewSet):
+    queryset = File.objects.all()
+    serializer_class = FileSerializer
+    permission_classes = [IsAuthenticated]
 
-        # Save file metadata to SQLite database
-        new_file = File.objects.create(
-            user=request.user,
-            file_name=file.name,
-            file_url=file_url
-        )
+    def create(self, request, *args, **kwargs):
+        file = request.FILES.get('file')
+        if not file:
+            return Response({'error': 'No file provided.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        return Response({'url': file_url}, status=status.HTTP_201_CREATED)
-    else:
-        return Response({"error": "Authentication required."}, status=status.HTTP_401_UNAUTHORIZED)
+        try:
+            cloudinary_response = cloudinary.uploader.upload(file)
+            file_url = cloudinary_response.get('secure_url')
+
+            new_file = File.objects.create(
+                user=request.user,
+                file_name=file.name,
+                file_url=file_url
+            )
+
+            serializer = self.get_serializer(new_file)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -26,6 +26,7 @@ SECRET_KEY = 'django-insecure-7e#5x031jqvul7ejm3e9i-^m+4ocwk_cqm+)5y_glryu2-h*ji
 DEBUG = True
 
 ALLOWED_HOSTS = ['quantumvault-mena.onrender.com', 'localhost']
+CORS_ALLOW_ALL_ORIGINS = True
 
 
 # Application definition
